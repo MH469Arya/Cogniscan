@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Voice Companion</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="app-container" id="main-container">
+        <div id="status-badge" class="idle">⏳ STANDBY</div>
+        <div class="score-display">Score: <span id="score">0</span></div>
+
+        <h1 id="assistant-text">Click anywhere to start...</h1>
+
+        <div id="debug-text">Heard: "..."</div>
+
+        <div class="controls">
+            <button id="repeat-btn" class="big-btn">🔊 Repeat</button>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
