@@ -33,7 +33,7 @@ class _WaveformAnimationState extends State<WaveformAnimation>
   @override
   void dispose() {
     _controller.dispose();
-    super.initState();
+    super.dispose();
   }
 
   @override
@@ -58,7 +58,7 @@ class _WaveformAnimationState extends State<WaveformAnimation>
                 height: currentHeight,
                 margin: const EdgeInsets.symmetric(horizontal: 4),
                 decoration: BoxDecoration(
-                  color: theme.colorScheme.primary.withOpacity(widget.isListening ? 0.8 : 0.3),
+                  color: theme.colorScheme.primary.withValues(alpha: widget.isListening ? 0.8 : 0.3),
                   borderRadius: BorderRadius.circular(10),
                 ),
               );

@@ -20,7 +20,7 @@ class _ColorReactionGameState extends ConsumerState<ColorReactionGame> {
   final int _maxTrials = 25;
   
   Color? _currentColor;
-  Color _targetColor = const Color(0xFF006064); // Deep Teal
+  final Color _targetColor = const Color(0xFF006064); // Deep Teal
   bool _isShowing = false;
   Timer? _trialTimer;
   Timer? _spawnTimer;
@@ -172,7 +172,7 @@ class _ColorReactionGameState extends ConsumerState<ColorReactionGame> {
             Container(
               padding: const EdgeInsets.all(24),
               decoration: BoxDecoration(
-                color: theme.colorScheme.primary.withOpacity(0.1),
+                color: theme.colorScheme.primary.withValues(alpha: 0.1),
                 shape: BoxShape.circle,
               ),
               child: Icon(Icons.touch_app, size: 80, color: theme.colorScheme.primary),
@@ -238,7 +238,7 @@ class _ColorReactionGameState extends ConsumerState<ColorReactionGame> {
                     shape: BoxShape.circle,
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black.withOpacity(0.1),
+                        color: Colors.black.withValues(alpha: 0.1),
                         blurRadius: 10,
                         offset: const Offset(0, 5),
                       ),

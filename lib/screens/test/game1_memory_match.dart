@@ -38,7 +38,7 @@ class _MemoryMatchGameState extends ConsumerState<MemoryMatchGame> {
 
   late List<Map<String, dynamic>> _targetItems;
   late List<Map<String, dynamic>> _gridItems;
-  List<int> _selectedIndices = [];
+  final List<int> _selectedIndices = [];
   int _correctTaps = 0;
   int _falseTaps = 0;
   DateTime? _startTime;
@@ -176,7 +176,7 @@ class _MemoryMatchGameState extends ConsumerState<MemoryMatchGame> {
             Container(
               padding: const EdgeInsets.all(24),
               decoration: BoxDecoration(
-                color: theme.colorScheme.secondary.withOpacity(0.1),
+                color: theme.colorScheme.secondary.withValues(alpha: 0.1),
                 shape: BoxShape.circle,
               ),
               child: Icon(Icons.psychology, size: 80, color: theme.colorScheme.secondary),
@@ -234,7 +234,7 @@ class _MemoryMatchGameState extends ConsumerState<MemoryMatchGame> {
                 decoration: BoxDecoration(
                   color: theme.colorScheme.surface,
                   borderRadius: BorderRadius.circular(16),
-                  border: Border.all(color: theme.colorScheme.primary.withOpacity(0.3)),
+                  border: Border.all(color: theme.colorScheme.primary.withValues(alpha: 0.3)),
                 ),
                 child: Stack(
                   fit: StackFit.expand,
@@ -247,7 +247,7 @@ class _MemoryMatchGameState extends ConsumerState<MemoryMatchGame> {
                       right: 0,
                       child: Container(
                         padding: const EdgeInsets.symmetric(vertical: 4),
-                        color: Colors.black.withOpacity(0.5),
+                        color: Colors.black.withValues(alpha: 0.5),
                         child: Text(
                           item['label'],
                           textAlign: TextAlign.center,
@@ -300,9 +300,9 @@ class _MemoryMatchGameState extends ConsumerState<MemoryMatchGame> {
                   clipBehavior: Clip.antiAlias,
                   decoration: BoxDecoration(
                     color: isCorrectMatch 
-                        ? Colors.green.withOpacity(0.1) 
+                        ? Colors.green.withValues(alpha: 0.1) 
                         : isWrongMatch 
-                            ? theme.colorScheme.error.withOpacity(0.1)
+                            ? theme.colorScheme.error.withValues(alpha: 0.1)
                             : theme.colorScheme.surface,
                     borderRadius: BorderRadius.circular(16),
                     border: Border.all(
@@ -310,7 +310,7 @@ class _MemoryMatchGameState extends ConsumerState<MemoryMatchGame> {
                           ? Colors.green 
                           : isWrongMatch 
                               ? theme.colorScheme.error 
-                              : theme.colorScheme.onSurface.withOpacity(0.1),
+                              : theme.colorScheme.onSurface.withValues(alpha: 0.1),
                       width: isSelected ? 3 : 1,
                     ),
                   ),

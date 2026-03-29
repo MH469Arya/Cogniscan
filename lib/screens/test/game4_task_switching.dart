@@ -25,8 +25,8 @@ class _TaskSwitchingGameState extends ConsumerState<TaskSwitchingGame> {
   int _errors = 0;
   DateTime? _roundStartTime;
   
-  List<int> _roundTimes = []; // Time in ms per round
-  List<int> _roundErrors = [];
+  final List<int> _roundTimes = []; // Time in ms per round
+  final List<int> _roundErrors = [];
   int? _lastCorrectIndex; // For animation
 
   void _startRound(int round) {
@@ -126,7 +126,7 @@ class _TaskSwitchingGameState extends ConsumerState<TaskSwitchingGame> {
           barrierDismissible: false,
           builder: (context) => AlertDialog(
             title: const Text('Round Completed!'),
-            content: Text('Accuracy and focus were key. Ready for the next challenge?'),
+            content: const Text('Accuracy and focus were key. Ready for the next challenge?'),
             actions: [
               ElevatedButton(
                 onPressed: () {
@@ -196,7 +196,7 @@ class _TaskSwitchingGameState extends ConsumerState<TaskSwitchingGame> {
             Container(
               padding: const EdgeInsets.all(24),
               decoration: BoxDecoration(
-                color: theme.colorScheme.primary.withOpacity(0.1),
+                color: theme.colorScheme.primary.withValues(alpha: 0.1),
                 shape: BoxShape.circle,
               ),
               child: Icon(Icons.sync_alt, size: 80, color: theme.colorScheme.primary),
@@ -261,9 +261,9 @@ class _TaskSwitchingGameState extends ConsumerState<TaskSwitchingGame> {
                 child: Container(
                   decoration: BoxDecoration(
                     color: isCorrectPulse 
-                        ? Colors.green.withOpacity(0.3)
+                        ? Colors.green.withValues(alpha: 0.3)
                         : isAlreadyTapped 
-                            ? theme.colorScheme.secondary.withOpacity(0.2) 
+                            ? theme.colorScheme.secondary.withValues(alpha: 0.2) 
                             : theme.colorScheme.surface,
                     borderRadius: BorderRadius.circular(20),
                     border: Border.all(
@@ -271,7 +271,7 @@ class _TaskSwitchingGameState extends ConsumerState<TaskSwitchingGame> {
                           ? Colors.green
                           : isAlreadyTapped 
                               ? theme.colorScheme.secondary 
-                              : theme.colorScheme.primary.withOpacity(0.3),
+                              : theme.colorScheme.primary.withValues(alpha: 0.3),
                       width: isCorrectPulse ? 3 : 2,
                     ),
                   ),

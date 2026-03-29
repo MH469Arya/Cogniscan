@@ -34,6 +34,8 @@ class ResultsSummaryScreen extends ConsumerWidget {
             child: Column(
               children: [
                 _buildOverallScore(theme, session.overallScore),
+                const SizedBox(height: 24),
+                _buildComparisonSection(theme, session.overallScore),
                 const SizedBox(height: 32),
                 _buildChartSection(theme, results),
                 const SizedBox(height: 32),
@@ -96,6 +98,94 @@ class ResultsSummaryScreen extends ConsumerWidget {
       );
   }
 
+  Widget _buildComparisonSection(ThemeData theme, int currentScore) {
+    // Mock data for comparison
+    const previousScore = 72;
+    const averageScore = 78;
+    
+    final improvement = currentScore - previousScore;
+    final vsOthers = currentScore - averageScore;
+
+    return Row(
+      children: [
+        Expanded(
+          child: _buildComparisonCard(
+            theme,
+            'Previous Test',
+            improvement,
+            'than last time',
+            Icons.history_rounded,
+          ),
+        ),
+        const SizedBox(width: 12),
+        Expanded(
+          child: _buildComparisonCard(
+            theme,
+            'Global Average',
+            vsOthers,
+            'than others',
+            Icons.public_rounded,
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildComparisonCard(
+    ThemeData theme,
+    String title,
+    int difference,
+    String subtitle,
+    IconData icon,
+  ) {
+    final isPositive = difference >= 0;
+    final color = isPositive ? const Color(0xFF4CAF50) : const Color(0xFFE53935);
+    final diffText = '${isPositive ? '+' : ''}$difference%';
+
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: theme.colorScheme.surface,
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: color.withValues(alpha: 0.1)),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Icon(icon, size: 16, color: theme.hintColor),
+              const SizedBox(width: 6),
+              Text(
+                title,
+                style: theme.textTheme.labelMedium?.copyWith(color: theme.hintColor),
+              ),
+              const Spacer(),
+              Icon(
+                isPositive ? Icons.trending_up_rounded : Icons.trending_down_rounded,
+                color: color,
+                size: 14,
+              ),
+            ],
+          ),
+          const SizedBox(height: 10),
+          Text(
+            diffText,
+            style: theme.textTheme.headlineSmall?.copyWith(
+              color: color,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          const SizedBox(height: 2),
+          Text(
+            subtitle,
+            style: theme.textTheme.bodySmall?.copyWith(fontSize: 10, color: theme.hintColor),
+          ),
+        ],
+      ),
+    );
+  }
+
   Widget _buildChartSection(ThemeData theme, List<GameResult> results) {
     return Column(
         children: [
@@ -112,13 +202,13 @@ class ResultsSummaryScreen extends ConsumerWidget {
                RadarChartData(
                   radarShape: RadarShape.circle,
                   ticksTextStyle: const TextStyle(color: Colors.transparent),
-                  gridBorderData: BorderSide(color: theme.colorScheme.secondary.withOpacity(0.2), width: 1),
+                  gridBorderData: BorderSide(color: theme.colorScheme.secondary.withValues(alpha: 0.2), width: 1),
                   borderData: FlBorderData(show: false),
                   titlePositionPercentageOffset: 0.1,
                   titleTextStyle: theme.textTheme.labelLarge,
                   dataSets: [
                      RadarDataSet(
-                        fillColor: theme.colorScheme.primary.withOpacity(0.3),
+                        fillColor: theme.colorScheme.primary.withValues(alpha: 0.3),
                         borderColor: theme.colorScheme.primary,
                         entryRadius: 3,
                         dataEntries: results.isEmpty 
@@ -141,13 +231,13 @@ class ResultsSummaryScreen extends ConsumerWidget {
      return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('Key Insights', style: theme.textTheme.headlineSmall),
+          const Text('Key Insights', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
           const SizedBox(height: 16),
           ...results.map((r) => Card(
             margin: const EdgeInsets.only(bottom: 12),
             child: ListTile(
                leading: CircleAvatar(
-                  backgroundColor: theme.colorScheme.secondary.withOpacity(0.2),
+                  backgroundColor: theme.colorScheme.secondary.withValues(alpha: 0.2),
                   child: Text('${r.gameIndex + 1}', style: TextStyle(color: theme.colorScheme.secondary, fontWeight: FontWeight.bold)),
                ),
                title: Text(r.gameName, style: const TextStyle(fontWeight: FontWeight.bold)),

@@ -19,11 +19,11 @@ class AppTheme {
   static ThemeData get lightTheme {
     return ThemeData(
       useMaterial3: true,
-      colorScheme: const ColorScheme.light(
+      colorScheme: ColorScheme.light(
         primary: primaryColor,
         secondary: secondaryColor,
         surface: backgroundColor, // Use White as main background surface
-        error: Color(0xFFE57373), // Soft Red
+        error: const Color(0xFFE57373), // Soft Red
         onPrimary: Colors.white,
         onSecondary: Colors.white,
         onSurface: textPrimaryColor,

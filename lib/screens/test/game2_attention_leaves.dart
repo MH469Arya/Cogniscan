@@ -101,6 +101,10 @@ class _AttentionLeavesGameState extends ConsumerState<AttentionLeavesGame> {
 
     // Countdown timer
     _gameTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      if (!mounted) {
+        timer.cancel();
+        return;
+      }
       setState(() => _secondsLeft--);
       if (_secondsLeft <= 0) {
         timer.cancel();
@@ -184,7 +188,7 @@ class _AttentionLeavesGameState extends ConsumerState<AttentionLeavesGame> {
             Container(
               padding: const EdgeInsets.all(24),
               decoration: BoxDecoration(
-                color: theme.colorScheme.secondary.withOpacity(0.1),
+                color: theme.colorScheme.secondary.withValues(alpha: 0.1),
                 shape: BoxShape.circle,
               ),
               child: Image.asset(
@@ -229,8 +233,8 @@ class _AttentionLeavesGameState extends ConsumerState<AttentionLeavesGame> {
           width: double.infinity,
           padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 16),
           color: isPointing
-              ? theme.colorScheme.primary.withOpacity(0.1)
-              : theme.colorScheme.secondary.withOpacity(0.1),
+              ? theme.colorScheme.primary.withValues(alpha: 0.1)
+              : theme.colorScheme.secondary.withValues(alpha: 0.1),
           child: Column(
             children: [
               Text(

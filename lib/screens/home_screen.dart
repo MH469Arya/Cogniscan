@@ -21,7 +21,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
     final user = ref.watch(userProvider);
     final theme = Theme.of(context);
     final displayName = user?.name ?? 'User';
-    final avatarUrl = user?.avatarUrl;
 
     return Scaffold(
       backgroundColor: theme.scaffoldBackgroundColor,
@@ -49,12 +48,15 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                   MaterialPageRoute(builder: (_) => const ProfileScreen())),
               child: CircleAvatar(
                 radius: 22,
-                backgroundColor: theme.colorScheme.secondary,
-                backgroundImage:
-                    avatarUrl != null ? NetworkImage(avatarUrl) : null,
-                child: avatarUrl == null
-                    ? const Icon(Icons.person, color: Colors.white)
-                    : null,
+                backgroundColor: theme.colorScheme.primary,
+                child: Text(
+                  displayName.isNotEmpty ? displayName[0].toUpperCase() : 'U',
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 18,
+                  ),
+                ),
               ),
             ),
           ),
@@ -152,6 +154,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
         _buildRecentActivity(ref),
         const SizedBox(height: 24),
 
+        // ── Call for test ────────────────────────────────────────
+        _buildCallForTestCard(theme, context),
+        const SizedBox(height: 16),
+
         // ── AI Recommendation ────────────────────────────────────
         _buildAIRecommendationCard(theme, context),
       ],
@@ -167,7 +173,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
       decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: [
-            scoreColor.withOpacity(0.08),
+            scoreColor.withValues(alpha: 0.08),
             theme.colorScheme.surface,
           ],
           begin: Alignment.topLeft,
@@ -237,7 +243,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                   padding: const EdgeInsets.symmetric(
                       horizontal: 10, vertical: 4),
                   decoration: BoxDecoration(
-                    color: scoreColor.withOpacity(0.12),
+                    color: scoreColor.withValues(alpha: 0.12),
                     borderRadius: BorderRadius.circular(20),
                   ),
                   child: Text(
@@ -283,7 +289,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                 padding:
                     const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                 decoration: BoxDecoration(
-                  color: lineColor.withOpacity(0.12),
+                  color: lineColor.withValues(alpha: 0.12),
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Text('Last 30 days',
@@ -305,7 +311,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                   drawVerticalLine: false,
                   horizontalInterval: 10,
                   getDrawingHorizontalLine: (_) => FlLine(
-                    color: theme.colorScheme.onSurface.withOpacity(0.05),
+                    color: theme.colorScheme.onSurface.withValues(alpha: 0.05),
                     strokeWidth: 1,
                   ),
                 ),
@@ -337,7 +343,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                     getTooltipItems: (spots) => spots
                         .map((s) => LineTooltipItem(
                               '${s.y.toInt()}',
-                              TextStyle(
+                              const TextStyle(
                                 color: Colors.white,
                                 fontWeight: FontWeight.bold,
                               ),
@@ -376,8 +382,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                       show: true,
                       gradient: LinearGradient(
                         colors: [
-                          lineColor.withOpacity(0.25),
-                          lineColor.withOpacity(0.0),
+                          lineColor.withValues(alpha: 0.25),
+                          lineColor.withValues(alpha: 0.0),
                         ],
                         begin: Alignment.topCenter,
                         end: Alignment.bottomCenter,
@@ -415,7 +421,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
           Container(
             padding: const EdgeInsets.all(8),
             decoration: BoxDecoration(
-              color: color.withOpacity(0.12),
+              color: color.withValues(alpha: 0.12),
               borderRadius: BorderRadius.circular(12),
             ),
             child: Icon(icon, color: color, size: 20),
@@ -437,7 +443,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
             borderRadius: BorderRadius.circular(4),
             child: LinearProgressIndicator(
               value: score / 100.0,
-              backgroundColor: color.withOpacity(0.12),
+              backgroundColor: color.withValues(alpha: 0.12),
               valueColor: AlwaysStoppedAnimation<Color>(color),
               minHeight: 5,
             ),
@@ -476,7 +482,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                 width: 44,
                 height: 44,
                 decoration: BoxDecoration(
-                  color: c.withOpacity(0.12),
+                  color: c.withValues(alpha: 0.12),
                   shape: BoxShape.circle,
                 ),
                 child: Icon(Icons.psychology_rounded, color: c, size: 22),
@@ -503,7 +509,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                 padding: const EdgeInsets.symmetric(
                     horizontal: 12, vertical: 6),
                 decoration: BoxDecoration(
-                  color: c.withOpacity(0.12),
+                  color: c.withValues(alpha: 0.12),
                   borderRadius: BorderRadius.circular(20),
                 ),
                 child: Text(
@@ -556,7 +562,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
           Text(
             'Your cognitive tasks score dropped slightly compared to last week. We recommend maintaining a good sleep schedule and doing more memory exercises.',
             style: theme.textTheme.bodyMedium
-                ?.copyWith(color: Colors.white.withOpacity(0.9), height: 1.5),
+                ?.copyWith(color: Colors.white.withValues(alpha: 0.9), height: 1.5),
           ),
           const SizedBox(height: 16),
           SizedBox(
@@ -576,6 +582,73 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
               ),
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.white,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(14)),
+                elevation: 0,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // ─────────────────────────────────────────────────────────────────
+  // Call for test Card
+  // ─────────────────────────────────────────────────────────────────
+  Widget _buildCallForTestCard(ThemeData theme, BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: theme.colorScheme.surface,
+        borderRadius: BorderRadius.circular(24),
+        border: Border.all(color: theme.colorScheme.primary.withValues(alpha: 0.1)),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: theme.colorScheme.primary.withValues(alpha: 0.1),
+                  shape: BoxShape.circle,
+                ),
+                child: Icon(Icons.call_rounded,
+                    color: theme.colorScheme.primary, size: 20),
+              ),
+              const SizedBox(width: 12),
+              Text(
+                'Call for test',
+                style: theme.textTheme.titleMedium
+                    ?.copyWith(fontWeight: FontWeight.bold),
+              ),
+            ],
+          ),
+          const SizedBox(height: 12),
+          Text(
+            'Prefer a guided session? You can take your cognitive test over a call with our specialist.',
+            style: theme.textTheme.bodyMedium
+                ?.copyWith(color: theme.hintColor, height: 1.5),
+          ),
+          const SizedBox(height: 16),
+          SizedBox(
+            width: double.infinity,
+            child: ElevatedButton.icon(
+              onPressed: () {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Connecting to specialist...')),
+                );
+              },
+              icon: const Icon(Icons.phone_rounded, color: Colors.white),
+              label: const Text(
+                'Call Now',
+                style:
+                    TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+              ),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: theme.colorScheme.primary,
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(14)),
                 elevation: 0,

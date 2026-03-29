@@ -128,6 +128,7 @@ class _SpeechChallengeGameState extends ConsumerState<SpeechChallengeGame> {
     if (isCorrect) _correctSentences++;
     _totalSentences++;
 
+    if (!mounted) return;
     setState(() {
       _isRecording = false;
       _phase = 0;
@@ -135,6 +136,7 @@ class _SpeechChallengeGameState extends ConsumerState<SpeechChallengeGame> {
 
     await Future.delayed(const Duration(milliseconds: 300));
 
+    if (!mounted) return;
     if (_sentenceIndex < _sentences.length - 1) {
       // Slide to next sentence (left scroll)
       await _pageController.animateToPage(
@@ -142,10 +144,12 @@ class _SpeechChallengeGameState extends ConsumerState<SpeechChallengeGame> {
         duration: const Duration(milliseconds: 450),
         curve: Curves.easeInOut,
       );
-      setState(() {
-        _sentenceIndex++;
-        _transcription = '';
-      });
+      if (mounted) {
+        setState(() {
+          _sentenceIndex++;
+          _transcription = '';
+        });
+      }
     } else {
       _processResults();
     }
@@ -204,7 +208,7 @@ class _SpeechChallengeGameState extends ConsumerState<SpeechChallengeGame> {
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
                   decoration: BoxDecoration(
-                    color: theme.colorScheme.primary.withOpacity(0.1),
+                    color: theme.colorScheme.primary.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(20),
                   ),
                   child: Text(
@@ -243,10 +247,10 @@ class _SpeechChallengeGameState extends ConsumerState<SpeechChallengeGame> {
                   child: Container(
                     padding: const EdgeInsets.all(22),
                     decoration: BoxDecoration(
-                      color: theme.colorScheme.primary.withOpacity(0.07),
+                      color: theme.colorScheme.primary.withValues(alpha: 0.07),
                       borderRadius: BorderRadius.circular(22),
                       border: Border.all(
-                        color: theme.colorScheme.primary.withOpacity(0.18),
+                        color: theme.colorScheme.primary.withValues(alpha: 0.18),
                       ),
                     ),
                     child: Center(
@@ -285,7 +289,7 @@ class _SpeechChallengeGameState extends ConsumerState<SpeechChallengeGame> {
                       ? Colors.green
                       : current
                           ? theme.colorScheme.primary
-                          : theme.colorScheme.onSurface.withOpacity(0.12),
+                          : theme.colorScheme.onSurface.withValues(alpha: 0.12),
                   borderRadius: BorderRadius.circular(8),
                 ),
               );
@@ -311,7 +315,7 @@ class _SpeechChallengeGameState extends ConsumerState<SpeechChallengeGame> {
                     color: (_isRecording
                             ? theme.colorScheme.error
                             : theme.colorScheme.primary)
-                        .withOpacity(0.3),
+                        .withValues(alpha: 0.3),
                     blurRadius: _isRecording ? 32 : 14,
                     spreadRadius: _isRecording ? 8 : 0,
                   ),
@@ -360,7 +364,7 @@ class _SpeechChallengeGameState extends ConsumerState<SpeechChallengeGame> {
                 borderRadius: BorderRadius.circular(18),
                 border: Border.all(
                   color: _isRecording
-                      ? theme.colorScheme.primary.withOpacity(0.35)
+                      ? theme.colorScheme.primary.withValues(alpha: 0.35)
                       : Colors.transparent,
                   width: 2,
                 ),
@@ -372,13 +376,13 @@ class _SpeechChallengeGameState extends ConsumerState<SpeechChallengeGame> {
                         key: const ValueKey('ph'),
                         children: [
                           Icon(Icons.text_fields_rounded,
-                              color: theme.hintColor.withOpacity(0.35),
+                              color: theme.hintColor.withValues(alpha: 0.35),
                               size: 18),
                           const SizedBox(width: 8),
                           Text(
                             'Your speech will appear here…',
                             style: theme.textTheme.bodyMedium?.copyWith(
-                              color: theme.hintColor.withOpacity(0.5),
+                              color: theme.hintColor.withValues(alpha: 0.5),
                               fontStyle: FontStyle.italic,
                             ),
                           ),
@@ -407,7 +411,7 @@ class _SpeechChallengeGameState extends ConsumerState<SpeechChallengeGame> {
         children: [
           CircularProgressIndicator(color: theme.colorScheme.primary),
           const SizedBox(height: 28),
-          Text('Analysing speech…', style: theme.textTheme.headlineSmall),
+          const Text('Analysing speech…', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
           const SizedBox(height: 8),
           Text('Checking clarity and accuracy.',
               style: theme.textTheme.bodyMedium?.copyWith(color: theme.hintColor)),

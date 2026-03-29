@@ -30,7 +30,7 @@ class TestSelectionScreen extends ConsumerWidget {
                 child: Text(
                   'Choose a game to start or follow the sequence to complete the session.',
                   style: theme.textTheme.headlineSmall?.copyWith(
-                    color: theme.colorScheme.onSurface.withOpacity(0.7),
+                    color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
                     height: 1.4,
                   ),
                   textAlign: TextAlign.center,
@@ -67,7 +67,6 @@ class TestSelectionScreen extends ConsumerWidget {
 
   Widget _buildGameCard(BuildContext context, WidgetRef ref, int index, GameMetadata game) {
     final theme = Theme.of(context);
-    final isFirst = index == 0;
 
     return Card(
       margin: const EdgeInsets.only(bottom: 20),
@@ -81,7 +80,7 @@ class TestSelectionScreen extends ConsumerWidget {
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                   decoration: BoxDecoration(
-                    color: theme.colorScheme.secondary.withOpacity(0.2),
+                    color: theme.colorScheme.secondary.withValues(alpha: 0.2),
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Text(
@@ -102,7 +101,7 @@ class TestSelectionScreen extends ConsumerWidget {
             Text(
               game.description,
               style: theme.textTheme.bodyLarge?.copyWith(
-                  color: theme.colorScheme.onSurface.withOpacity(0.6)),
+                  color: theme.colorScheme.onSurface.withValues(alpha: 0.6)),
             ),
             const SizedBox(height: 20),
             Row(

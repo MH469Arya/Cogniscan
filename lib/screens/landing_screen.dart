@@ -8,33 +8,34 @@ class LandingScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final size = MediaQuery.of(context).size;
+    final isSmallScreen = size.width < 600;
 
     return Scaffold(
       body: CustomScrollView(
         slivers: [
-          _buildHero(context, theme, size),
-          _buildProblem(context, theme),
-          _buildSolution(context, theme),
+          _buildHero(context, theme, size, isSmallScreen),
+          _buildProblem(context, theme, isSmallScreen),
+          _buildSolution(context, theme, isSmallScreen),
           _buildHowItWorks(context, theme),
-          _buildFeatures(context, theme),
-          _buildCTA(context, theme),
+          _buildFeatures(context, theme, isSmallScreen),
+          _buildCTA(context, theme, isSmallScreen),
           _buildFooter(context, theme),
         ],
       ),
     );
   }
 
-  Widget _buildHero(BuildContext context, ThemeData theme, Size size) {
+  Widget _buildHero(BuildContext context, ThemeData theme, Size size, bool isSmallScreen) {
     return SliverToBoxAdapter(
       child: Container(
-        height: size.height * 0.9,
-        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 60),
+        constraints: BoxConstraints(minHeight: size.height * 0.9),
+        padding: EdgeInsets.symmetric(horizontal: isSmallScreen ? 20 : 24, vertical: 60),
         decoration: BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
             colors: [
-              theme.colorScheme.primary.withOpacity(0.05),
+              theme.colorScheme.primary.withValues(alpha: 0.05),
               theme.scaffoldBackgroundColor,
             ],
           ),
@@ -45,7 +46,7 @@ class LandingScreen extends StatelessWidget {
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
               decoration: BoxDecoration(
-                color: theme.colorScheme.primary.withOpacity(0.1),
+                color: theme.colorScheme.primary.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(20),
               ),
               child: Text(
@@ -63,8 +64,9 @@ class LandingScreen extends StatelessWidget {
               'Detect Cognitive Decline Before It’s Too Late',
               textAlign: TextAlign.center,
               style: theme.textTheme.displayLarge?.copyWith(
-                fontSize: 40,
+                fontSize: isSmallScreen ? 32 : 48,
                 color: theme.colorScheme.onSurface,
+                height: 1.2,
               ),
             ),
             const SizedBox(height: 16),
@@ -73,18 +75,19 @@ class LandingScreen extends StatelessWidget {
               textAlign: TextAlign.center,
               style: theme.textTheme.bodyLarge?.copyWith(
                 color: theme.hintColor,
-                fontSize: 18,
+                fontSize: isSmallScreen ? 16 : 18,
               ),
             ),
             const SizedBox(height: 32),
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
               decoration: BoxDecoration(
-                color: theme.colorScheme.secondary.withOpacity(0.05),
+                color: theme.colorScheme.secondary.withValues(alpha: 0.05),
                 borderRadius: BorderRadius.circular(12),
               ),
               child: Text(
                 'Designed for real-world use, even in low-resource environments.',
+                textAlign: TextAlign.center,
                 style: TextStyle(
                   color: theme.colorScheme.secondary,
                   fontWeight: FontWeight.w600,
@@ -93,8 +96,10 @@ class LandingScreen extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 48),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
+            Wrap(
+              alignment: WrapAlignment.center,
+              spacing: 16,
+              runSpacing: 16,
               children: [
                 ElevatedButton(
                   onPressed: () {
@@ -111,7 +116,6 @@ class LandingScreen extends StatelessWidget {
                   ),
                   child: const Text('Get Started', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
                 ),
-                const SizedBox(width: 16),
                 OutlinedButton(
                   onPressed: () {
                     Navigator.push(
@@ -134,18 +138,18 @@ class LandingScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildProblem(BuildContext context, ThemeData theme) {
+  Widget _buildProblem(BuildContext context, ThemeData theme, bool isSmallScreen) {
     return SliverToBoxAdapter(
       child: Container(
-        padding: const EdgeInsets.all(40),
-        margin: const EdgeInsets.all(24),
+        padding: EdgeInsets.all(isSmallScreen ? 24 : 40),
+        margin: EdgeInsets.symmetric(horizontal: isSmallScreen ? 16 : 24, vertical: 24),
         decoration: BoxDecoration(
-          color: theme.colorScheme.surface.withOpacity(0.2),
+          color: theme.colorScheme.surface.withValues(alpha: 0.2),
           borderRadius: BorderRadius.circular(30),
           image: const DecorationImage(
             image: AssetImage('assets/images/bg/bg1.png'),
             fit: BoxFit.cover,
-            opacity: 0.1, // So text is readable
+            opacity: 0.1,
           ),
         ),
         child: Column(
@@ -154,7 +158,9 @@ class LandingScreen extends StatelessWidget {
             Text(
               'The Problem We’re Solving', 
               textAlign: TextAlign.center,
-              style: theme.textTheme.headlineLarge,
+              style: theme.textTheme.headlineLarge?.copyWith(
+                fontSize: isSmallScreen ? 28 : 36,
+              ),
             ),
             const SizedBox(height: 24),
             Text(
@@ -163,16 +169,19 @@ class LandingScreen extends StatelessWidget {
               style: theme.textTheme.bodyLarge?.copyWith(color: theme.hintColor),
             ),
             const SizedBox(height: 40),
-            // Centered Problem Points
-            const Center(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                   _ProblemPoint(text: 'Dementia is detected too late'),
-                   _ProblemPoint(text: 'Traditional methods are slow and manual'),
-                   _ProblemPoint(text: 'Lack of access in low-resource rural areas'),
-                   _ProblemPoint(text: 'Caregivers miss early warning signs'),
-                ],
+            Center(
+              child: Container(
+                constraints: const BoxConstraints(maxWidth: 500),
+                child: const Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                     _ProblemPoint(text: 'Dementia is detected too late'),
+                     _ProblemPoint(text: 'Traditional methods are slow and manual'),
+                     _ProblemPoint(text: 'Lack of access in low-resource rural areas'),
+                     _ProblemPoint(text: 'Caregivers miss early warning signs'),
+                  ],
+                ),
               ),
             ),
             const SizedBox(height: 40),
@@ -182,6 +191,7 @@ class LandingScreen extends StatelessWidget {
               style: theme.textTheme.titleLarge?.copyWith(
                 color: theme.colorScheme.primary,
                 fontStyle: FontStyle.italic,
+                fontSize: isSmallScreen ? 18 : 22,
               ),
             ),
           ],
@@ -190,26 +200,39 @@ class LandingScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildSolution(BuildContext context, ThemeData theme) {
+  Widget _buildSolution(BuildContext context, ThemeData theme, bool isSmallScreen) {
     return SliverToBoxAdapter(
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 60, horizontal: 24),
         child: Column(
           children: [
-            Text('Meet Cogniscan', style: theme.textTheme.displayMedium),
+            Text('Meet Cogniscan', style: isSmallScreen ? theme.textTheme.headlineLarge : theme.textTheme.displayMedium),
             const SizedBox(height: 16),
             Text(
               'A multimodal AI system that evaluates cognitive health using behavioral signals.',
               textAlign: TextAlign.center,
-              style: theme.textTheme.bodyLarge?.copyWith(color: theme.hintColor, fontSize: 20),
+              style: theme.textTheme.bodyLarge?.copyWith(color: theme.hintColor, fontSize: isSmallScreen ? 18 : 20),
             ),
             const SizedBox(height: 48),
-            Row(
-              children: [
-                Expanded(child: _SolutionCard(number: '01', title: 'Early Detection', description: 'Spots subtle patterns before symptoms.', theme: theme)),
-                const SizedBox(width: 16),
-                Expanded(child: _SolutionCard(number: '02', title: 'Continuous', description: 'Dynamic view of cognitive health.', theme: theme)),
-              ],
+            LayoutBuilder(
+              builder: (context, constraints) {
+                if (constraints.maxWidth < 600) {
+                  return Column(
+                    children: [
+                      _SolutionCard(number: '01', title: 'Early Detection', description: 'Spots subtle patterns before symptoms.', theme: theme, isFullWidth: true),
+                      const SizedBox(height: 16),
+                      _SolutionCard(number: '02', title: 'Continuous', description: 'Dynamic view of cognitive health.', theme: theme, isFullWidth: true),
+                    ],
+                  );
+                }
+                return Row(
+                  children: [
+                    Expanded(child: _SolutionCard(number: '01', title: 'Early Detection', description: 'Spots subtle patterns before symptoms.', theme: theme)),
+                    const SizedBox(width: 16),
+                    Expanded(child: _SolutionCard(number: '02', title: 'Continuous', description: 'Dynamic view of cognitive health.', theme: theme)),
+                  ],
+                );
+              },
             ),
             const SizedBox(height: 16),
             _SolutionCard(number: '03', title: 'Accessible', description: 'Works anywhere with minimal internet.', theme: theme, isFullWidth: true),
@@ -235,14 +258,14 @@ class LandingScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildFeatures(BuildContext context, ThemeData theme) {
+  Widget _buildFeatures(BuildContext context, ThemeData theme, bool isSmallScreen) {
     return SliverToBoxAdapter(
       child: Container(
-        padding: const EdgeInsets.all(40),
-        color: theme.colorScheme.primary, // Dark Teal from theme
+        padding: EdgeInsets.all(isSmallScreen ? 24 : 40),
+        color: theme.colorScheme.primary,
         child: Column(
           children: [
-            Text('Built for Impact', style: theme.textTheme.displayMedium?.copyWith(color: Colors.white)),
+            Text('Built for Impact', style: (isSmallScreen ? theme.textTheme.headlineLarge : theme.textTheme.displayMedium)?.copyWith(color: Colors.white)),
             const SizedBox(height: 48),
             _FeatureRow(icon: Icons.offline_bolt, title: 'Low-Resource Tech', text: 'Works on basic hardware/bandwidth.', color: theme.colorScheme.primary),
             _FeatureRow(icon: Icons.notifications_active, title: 'Caregiver Alerts', text: 'Instant risk notifications.', color: theme.colorScheme.secondary),
@@ -253,21 +276,21 @@ class LandingScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildCTA(BuildContext context, ThemeData theme) {
+  Widget _buildCTA(BuildContext context, ThemeData theme, bool isSmallScreen) {
     return SliverToBoxAdapter(
       child: Container(
         margin: const EdgeInsets.all(24),
-        padding: const EdgeInsets.all(48),
+        padding: EdgeInsets.symmetric(horizontal: isSmallScreen ? 24 : 48, vertical: 48),
         decoration: BoxDecoration(
           color: theme.colorScheme.primary,
           borderRadius: BorderRadius.circular(40),
         ),
         child: Column(
           children: [
-            const Text(
+            Text(
               'Start Early. Act Smarter.',
               textAlign: TextAlign.center,
-              style: TextStyle(color: Colors.white, fontSize: 32, fontWeight: FontWeight.bold),
+              style: TextStyle(color: Colors.white, fontSize: isSmallScreen ? 28 : 32, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 40),
             ElevatedButton(
@@ -280,10 +303,10 @@ class LandingScreen extends StatelessWidget {
               style: ElevatedButton.styleFrom(
                 backgroundColor: theme.colorScheme.secondary,
                 foregroundColor: Colors.white,
-                padding: const EdgeInsets.symmetric(horizontal: 48, vertical: 20),
+                padding: EdgeInsets.symmetric(horizontal: isSmallScreen ? 32 : 48, vertical: 20),
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
               ),
-              child: const Text('Try Cogniscan Free', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+              child: Text('Try Cogniscan Free', style: TextStyle(fontSize: isSmallScreen ? 18 : 20, fontWeight: FontWeight.bold)),
             ),
           ],
         ),
@@ -316,11 +339,26 @@ class _ProblemPoint extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.only(bottom: 12),
       child: Row(
-        mainAxisSize: MainAxisSize.min, // Center-able in a Column
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Container(width: 8, height: 8, decoration: BoxDecoration(color: Theme.of(context).colorScheme.primary, shape: BoxShape.circle)),
+          Padding(
+            padding: const EdgeInsets.only(top: 6),
+            child: Container(
+              width: 8,
+              height: 8,
+              decoration: BoxDecoration(
+                color: Theme.of(context).colorScheme.primary,
+                shape: BoxShape.circle,
+              ),
+            ),
+          ),
           const SizedBox(width: 12),
-          Text(text, style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 16)),
+          Expanded(
+            child: Text(
+              text,
+              style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 16),
+            ),
+          ),
         ],
       ),
     );
@@ -355,7 +393,7 @@ class _SolutionCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(number, style: TextStyle(fontSize: 32, fontWeight: FontWeight.w900, color: theme.colorScheme.primary.withOpacity(0.1))),
+          Text(number, style: TextStyle(fontSize: 32, fontWeight: FontWeight.w900, color: theme.colorScheme.primary.withValues(alpha: 0.1))),
           const SizedBox(height: 8),
           Text(title, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
           const SizedBox(height: 4),
@@ -387,13 +425,13 @@ class _HowItWorksCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(25),
-        boxShadow: [BoxShadow(color: color.withOpacity(0.05), blurRadius: 20, offset: const Offset(0, 4))],
+        boxShadow: [BoxShadow(color: color.withValues(alpha: 0.05), blurRadius: 20, offset: const Offset(0, 4))],
       ),
       child: Row(
         children: [
           Container(
             padding: const EdgeInsets.all(12),
-            decoration: BoxDecoration(color: color.withOpacity(0.1), borderRadius: BorderRadius.circular(15)),
+            decoration: BoxDecoration(color: color.withValues(alpha: 0.1), borderRadius: BorderRadius.circular(15)),
             child: Icon(icon, color: color, size: 28),
           ),
           const SizedBox(width: 20),
@@ -433,7 +471,7 @@ class _FeatureRow extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(title, style: const TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold)),
-                Text(text, style: TextStyle(color: Colors.white.withOpacity(0.7))),
+                Text(text, style: TextStyle(color: Colors.white.withValues(alpha: 0.7))),
               ],
             ),
           ),
