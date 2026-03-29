@@ -6,7 +6,7 @@ app = Flask(__name__)
 
 # --- CONFIG ---
 # Replace with your actual Gemini API Key
-genai.configure(api_key="AIzaSyD7qs9UWUjtA2FUvKpm7QiBkxg9_Q5dqsU")
+genai.configure(api_key="---API KEY---")
 gemini = genai.GenerativeModel('gemini-2.5-flash-lite')
 
 WORDS_DATA = {
